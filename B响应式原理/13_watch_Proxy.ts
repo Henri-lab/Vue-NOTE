@@ -5,7 +5,7 @@ import { effect } from './11_option_dirty';
 // 观察Proxy数据；
 export default function watchProxy(source: Object, cb: Function) {
   const readFn = () => readTraverse(source);
-  const options = { lazy: false, schedular: (fn: Function) => cb() };
+  const options = { lazy: false, schedular: (fn?: Function) => cb() };
   effect(readFn, options);
 }
 

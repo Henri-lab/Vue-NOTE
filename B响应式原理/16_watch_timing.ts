@@ -1,5 +1,5 @@
 import { effect } from './11_option_dirty';
-import { readTraverse } from './13_watchproxy';
+import { readTraverse } from './13_watch_Proxy';
 import { WatchOptions } from './00_interface&type';
 
 // 关于新添watch配置options.immediate的judgement来使得watch的回调可以立即执行，而无需等待观测对象变化;
@@ -11,7 +11,7 @@ import { WatchOptions } from './00_interface&type';
 // --------post: 在组件更新之后触发 √
 // --------sync: 同步触发 x
 
-export default function watch(
+export default function watchImmediate(
   source: Object | Function,
   cb: Function,
   options: WatchOptions = { immediate: false }
@@ -23,9 +23,8 @@ export default function watch(
     getter = () => source;
   }
 
-  let newValue = undefined;
-  let oldValue = undefined;
-
+  let newValue: any= undefined;
+  let oldValue: any = undefined;
   //NEW!
   const job = () => {
     newValue = eFnRegister();
@@ -36,10 +35,10 @@ export default function watch(
   //setValue后执行
   const eFnRegister = effect(getter, {
     lazy: true,
-    schedular: (fn: Function) => {
+    schedular: (fn?: Function) => {
       //NEW!
       if (options.flush === 'post') {
-        // Promise.resolve() 创建了一个立即解决的 Promise;这在async中常用于将代码添加到事件cycle的Microtask Queue中，以确保在当前任务即watch内部logic完成后执行
+        // Promise.resolve() 创建了一个立即解决的 Promise;这在async中常用于将代码添加到事件cycle的Microtask Queue中，以确保在当前任务即watch内部other logic完成后执行'job/cb'
         const p = Promise.resolve();
         p.then(() => job());
       } else job();

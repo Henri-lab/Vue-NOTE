@@ -28,12 +28,12 @@ import proxyCreater from './00_proxyCreater';
 
 // Solution:重新设计schedular和computed：
 function computed(getter: Function) {
-  let value: Object | number | string | undefined;
+  let value: any;
   let dirty = true;
 
   const eFnRegister = effect(getter, {
     lazy: true,
-    schedular: (fn: Function) => {
+    schedular: (fn?: Function) => {
       if (!dirty) {
         dirty = true;
         // 手动update
@@ -73,5 +73,3 @@ effect(function outer() {
 // sumComp 即返回的obj不是一个Proxy数据，所以没法auto触发get-track/set-trigger；
 // 读取 obj.value之后：1.dirty=false；2.obj.value拥有了依赖eFn；
 // 修改 deps.prop之后：1.trigger invokes；2.trigger调用的schedular中调用的trigger invokes；
-
-

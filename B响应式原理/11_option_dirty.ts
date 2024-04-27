@@ -82,6 +82,7 @@ function computed_bug(getter: Function) {
 
 //test
 {
+  // computed实际上是⼀个懒执⾏的副作⽤函数;
   //1
   let obj = { a: 1, b: 0, c: 0 };
   //2---->~recomputing后修改为dirty=false
